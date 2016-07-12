@@ -1,4 +1,4 @@
-package com.name.game.structure;
+package com.name.game.structure.graph;
 
 import java.util.ArrayList;
 

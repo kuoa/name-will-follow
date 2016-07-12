@@ -10,13 +10,13 @@ public class NameWillFollow extends Game {
 	public static final int HEIGHT = 800;
 	public static final String TITLE = "Name Will Follow";
 
-	public SpriteBatch spriteBatch;
+	public static SpriteBatch spriteBatch;
 
 	@Override
 	public void create() {
 		
 		spriteBatch = new SpriteBatch();
-		setScreen(new PlayScreen(this));
+		setScreen(new PlayScreen());
 	}
 
 	@Override
