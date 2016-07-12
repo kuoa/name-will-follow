@@ -27,8 +27,8 @@ public class TestStructure {
 		System.out.println(graph);		
 		
 		System.out.println(graph.removeVertex(vertices.get(2)));
-		Edge e43 = vertices.get(3).getEdges().get(1);		
-		graph.removeEdge(e43);
+		//Edge e43 = vertices.get(3).getEdges().get(0);		
+		//graph.removeEdge(e43);
 		
 		System.out.println(graph);
 
