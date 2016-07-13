@@ -1,8 +1,9 @@
 package com.name.game.structure.grid;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.name.game.NameWillFollow;
+import com.name.game.MyGame;
 
 /**
  * Created by kuoa on 7/12/16.
@@ -13,25 +14,21 @@ public class Grid {
     private int cols;
     private Color bgColor;
     private Cell[][] grid;
-    private float cellWidth;
-    private float cellHeight;
-
-    private SpriteBatch batch;
 
     public Grid(int[][] types){
+
         rows = types.length;
         cols = types[0].length;
-        cellWidth = NameWillFollow.WIDTH / rows;
-        cellHeight = NameWillFollow.HEIGHT / cols;
+        float cellWidth = MyGame.WIDTH / cols;
+        float cellHeight = MyGame.HEIGHT / rows;
 
         bgColor = new Color(0.2f, 0.2f, 0.2f, 1);
-        batch = NameWillFollow.spriteBatch;
-
         grid = new Cell[rows][cols];
+        System.out.println("Rows: " + rows + " Cols: " + cols);
 
         for(int i = 0; i < rows; i++){
             for (int j = 0; j < cols; j++){
-                grid[i][j] = new Cell(types[i][j], i, j, cellWidth, cellHeight);
+                grid[i][j] = new Cell(types[i][j], j, i, cellWidth, cellHeight);
             }
         }
     }
@@ -45,7 +42,9 @@ public class Grid {
         }
     }
 
-    public void draw(){
+    public void draw(SpriteBatch batch){
+        Gdx.gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 grid[i][j].draw(batch);

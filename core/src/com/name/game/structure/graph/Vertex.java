@@ -2,7 +2,7 @@ package com.name.game.structure.graph;
 
 import java.util.ArrayList;
 
-import com.name.game.NameWillFollow;
+import com.name.game.MyGame;
 
 public class Vertex {
 	
@@ -20,8 +20,8 @@ public class Vertex {
 	}
 	
 	public Vertex(String label){
-		this.x = (float)Math.random() * NameWillFollow.WIDTH;
-		this.y = (float)Math.random() * NameWillFollow.HEIGHT;
+		this.x = (float)Math.random() * MyGame.WIDTH;
+		this.y = (float)Math.random() * MyGame.HEIGHT;
 		this.label = label;
 		edges = new ArrayList<Edge>();			
 	}

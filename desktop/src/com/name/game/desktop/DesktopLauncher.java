@@ -2,16 +2,16 @@ package com.name.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.name.game.NameWillFollow;
+import com.name.game.MyGame;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 						
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = NameWillFollow.WIDTH;
-		config.height = NameWillFollow.HEIGHT;
-		config.title = NameWillFollow.TITLE;
+		config.width = MyGame.WIDTH;
+		config.height = MyGame.HEIGHT;
+		config.title = MyGame.TITLE;
 		
-		new LwjglApplication(new NameWillFollow(), config);
+		new LwjglApplication(new MyGame(), config);
 	}
 }

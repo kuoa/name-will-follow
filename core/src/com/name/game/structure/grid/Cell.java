@@ -1,6 +1,5 @@
 package com.name.game.structure.grid;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -27,11 +26,10 @@ public class Cell {
         this.height = height;
 
         texture = new Texture("pixel.jpg");
-
     }
 
     public void update(float delta){
-
+        // TODO Auto-generated method stub
     }
 
     public void draw(SpriteBatch batch){

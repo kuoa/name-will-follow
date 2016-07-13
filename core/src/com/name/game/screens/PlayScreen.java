@@ -3,29 +3,37 @@ package com.name.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.name.game.NameWillFollow;
+import com.name.game.MyGame;
 import com.name.game.structure.grid.Grid;
+
+
 
 public class PlayScreen implements Screen {
 
 	private Grid grid;
-	private SpriteBatch batch;
+    private MyGame game;
 	
-	public PlayScreen() {
+	public PlayScreen(MyGame game) {
 
-		batch = NameWillFollow.spriteBatch;
+        this.game = game;
 
-		int w = 10;
-		int h = 20;
+		int r = 20;
+		int c = 10;
 
-		int[][] types = new int[w][h];
+		int[][] types = new int[r][c];
 
-		for(int i = 0; i < w; i++){
-			for(int j = 0; j < h; j++){
+		for(int i = 0; i < r; i++){
+			for(int j = 0; j < c; j++){
 				types[i][j] = (int)(Math.random() * 4);
 			}
 		}
+
+        for(int i = r - 1; i >= 0; i--){
+            for(int j = 0; j < c; j++){
+                System.out.print(types[i][j]);
+            }
+            System.out.println();
+        }
 
 		grid = new Grid(types);
 
@@ -38,16 +46,18 @@ public class PlayScreen implements Screen {
 	}
 
 	private void update(float delta){
-		grid.update(delta);
+
+        grid.update(delta);
 	}
 
 	private void draw(){
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		batch.begin();
-		grid.draw();
-		batch.end();
+        game.camera.update();
+        game.batch.setProjectionMatrix(game.camera.combined);
+		game.batch.begin();
+		grid.draw(game.batch);
+		game.batch.end();
 	}
 
 	@Override
@@ -59,8 +69,7 @@ public class PlayScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
+		game.port.update(width, height);
 	}
 
 	@Override
@@ -86,5 +95,4 @@ public class PlayScreen implements Screen {
 		// TODO Auto-generated method stub
 		
 	}
-
 }
