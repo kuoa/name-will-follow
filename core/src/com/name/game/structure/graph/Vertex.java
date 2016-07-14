@@ -8,21 +8,18 @@ public class Vertex {
 	
 	private float x;
 	private float y;
-	private String label;
 	
 	private ArrayList<Edge> edges;
 	
-	public Vertex(float x, float y, String label){
+	public Vertex(float x, float y){
 		this.x = x;
 		this.y = y;
-		this.label = label;
 		edges = new ArrayList<Edge>();
 	}
 	
-	public Vertex(String label){
+	public Vertex(){
 		this.x = (float)Math.random() * MyGame.WIDTH;
 		this.y = (float)Math.random() * MyGame.HEIGHT;
-		this.label = label;
 		edges = new ArrayList<Edge>();			
 	}
 	
@@ -58,7 +55,7 @@ public class Vertex {
 	
 	@Override
 	public String toString(){
-		return "Vertex: " + label + " x: " + x + " y: " + y;
+		return "Vertex: -> x: " + x + " y: " + y;
 	}
 	
 	@Override

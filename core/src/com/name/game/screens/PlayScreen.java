@@ -35,7 +35,7 @@ public class PlayScreen implements Screen {
             System.out.println();
         }
 
-		grid = new Grid(types);
+		grid = new Grid(game, types);
 
 	}
 
@@ -56,7 +56,7 @@ public class PlayScreen implements Screen {
         game.camera.update();
         game.batch.setProjectionMatrix(game.camera.combined);
 		game.batch.begin();
-		grid.draw(game.batch);
+		grid.draw();
 		game.batch.end();
 	}
 
@@ -93,6 +93,6 @@ public class PlayScreen implements Screen {
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
