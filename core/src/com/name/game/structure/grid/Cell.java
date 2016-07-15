@@ -8,34 +8,48 @@ import com.name.game.structure.graph.Vertex;
 /**
  * Created by kuoa on 7/12/16.
  */
-public class Cell {
+public class Cell extends Vertex {
 
-    private int x;
-    private int y;
+    private int row;
+    private int coll;
     private boolean touched;
+    private boolean seen;
 
     private Grid grid;
-    private Vertex vertex;
 
     private CellType type;
     private Texture texture;
 
-    public Cell(Grid grid, int x, int y){
+    public Cell(Grid grid, int row, int coll){
 
-        this.x = x;
-        this.y = y;
+        // middle of the cell in pixels
+        super(row * grid.cellWidth + grid.normalPadding + (grid.cellWidth / 2),
+                coll * grid.cellHeight + grid.normalPadding + (grid.cellHeight / 2));
+
+        this.row = row;
+        this.coll = coll;
+        this.touched = false;
+        this.seen = false;
 
         this.grid = grid;
-        this.vertex = new Vertex(x, y);
 
-        int typeIndex = grid.types[y][x];
+        int typeIndex = grid.types[coll][row];
         this.type = CellType.values()[typeIndex];
 
         texture = new Texture("pixel.jpg");
     }
 
     public void touch(){
+        seen = true;
         touched = !touched;
+    }
+
+    public void unSee(){
+        seen = false;
+    }
+
+    public boolean wasSeen(){
+        return seen;
     }
 
     public void update(float delta){
@@ -50,11 +64,10 @@ public class Cell {
         else {
             batch.setColor(type.getColor());
         }
-        batch.draw(texture, x * grid.cellWidth + grid.normalPadding, y * grid.cellHeight + grid.normalPadding, grid.cellWidth, grid.cellHeight);
+        batch.draw(texture, row * grid.cellWidth + grid.normalPadding, coll * grid.cellHeight + grid.normalPadding, grid.cellWidth, grid.cellHeight);
     }
 
     public void dispose() {
-        // TODO Auto-generated method stub
-
+        texture.dispose();
     }
 }

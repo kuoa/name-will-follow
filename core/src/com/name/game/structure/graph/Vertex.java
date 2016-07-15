@@ -2,8 +2,6 @@ package com.name.game.structure.graph;
 
 import java.util.ArrayList;
 
-import com.name.game.MyGame;
-
 public class Vertex {
 	
 	private float x;
@@ -16,12 +14,7 @@ public class Vertex {
 		this.y = y;
 		edges = new ArrayList<Edge>();
 	}
-	
-	public Vertex(){
-		this.x = (float)Math.random() * MyGame.WIDTH;
-		this.y = (float)Math.random() * MyGame.HEIGHT;
-		edges = new ArrayList<Edge>();			
-	}
+
 	
 	public void addEdge(Edge edge){
 		if(!edges.contains(edge)){
@@ -32,6 +25,11 @@ public class Vertex {
 	public void removeEdge(Edge edge){
 		edges.remove(edge);		
 	}
+
+    public Edge getFirstEdge(){
+
+        return edges.size() > 0 ? edges.get(0) : null;
+    }
 	
 	public boolean containsEdge(Edge edge){
 		return edges.contains(edge);

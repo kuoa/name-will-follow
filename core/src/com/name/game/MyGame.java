@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.name.game.screens.PlayScreen;
@@ -16,7 +17,7 @@ public class MyGame extends Game {
 
 	public SpriteBatch batch;
     public OrthographicCamera camera;
-    public static Viewport port;
+    public Viewport port;
 
 	@Override
 	public void create() {
@@ -24,7 +25,7 @@ public class MyGame extends Game {
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
 
-        port = new FitViewport(WIDTH, HEIGHT, camera);
+        port = new ExtendViewport(WIDTH, HEIGHT, camera);
         port.apply();
         camera.translate(WIDTH / 2, HEIGHT / 2);
 

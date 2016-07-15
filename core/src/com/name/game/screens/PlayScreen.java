@@ -24,7 +24,12 @@ public class PlayScreen implements Screen {
 
 		for(int i = 0; i < r; i++){
 			for(int j = 0; j < c; j++){
-				types[i][j] = (int)(Math.random() * 4);
+				if(Math.random() < 0.3) {
+                    types[i][j] = (int) (Math.random() * 3);
+                }
+                else{
+                    types[i][j] = 3;
+                }
 			}
 		}
 
@@ -92,7 +97,6 @@ public class PlayScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-
+        grid.dispose();
 	}
 }

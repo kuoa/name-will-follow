@@ -82,7 +82,15 @@ public class Graph {
 		return false;
 	}
 
-	@Override
+    public ArrayList<Vertex> getVertices() {
+        return vertices;
+    }
+
+    public ArrayList<Edge> getEdges(){
+        return edges;
+    }
+
+        @Override
 	public String toString() {
 		String s = "Graph: \n";
 
