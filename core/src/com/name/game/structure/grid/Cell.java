@@ -3,6 +3,7 @@ package com.name.game.structure.grid;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.name.game.structure.graph.Vertex;
 
 /**
@@ -10,38 +11,44 @@ import com.name.game.structure.graph.Vertex;
  */
 public class Cell extends Vertex {
 
-    private int row;
-    private int coll;
+    private Vector2 gridPosition;
     private boolean touched;
     private boolean seen;
+    private boolean between;
 
     private Grid grid;
 
     private CellType type;
     private Texture texture;
 
-    public Cell(Grid grid, int row, int coll){
+    public Cell(Grid grid, Vector2 gridPosition){
 
         // middle of the cell in pixels
-        super(row * grid.cellWidth + grid.normalPadding + (grid.cellWidth / 2),
-                coll * grid.cellHeight + grid.normalPadding + (grid.cellHeight / 2));
+        super (new Vector2(
+                gridPosition.x * grid.cellWidth + grid.normalPadding + (grid.cellWidth / 2),
+                gridPosition.y * grid.cellHeight + grid.normalPadding + (grid.cellHeight / 2)));
 
-        this.row = row;
-        this.coll = coll;
-        this.touched = false;
-        this.seen = false;
+        this.gridPosition = gridPosition;
 
         this.grid = grid;
 
-        int typeIndex = grid.types[coll][row];
+        int typeIndex = grid.types[(int)gridPosition.y][(int)gridPosition.x];
         this.type = CellType.values()[typeIndex];
 
         texture = new Texture("pixel.jpg");
     }
 
+    public Vector2 getGridPosition(){
+        return gridPosition;
+    }
+
     public void touch(){
         seen = true;
         touched = !touched;
+    }
+
+    public void between(){
+        between = true;
     }
 
     public void unSee(){
@@ -52,19 +59,23 @@ public class Cell extends Vertex {
         return seen;
     }
 
+    public CellType getCellType(){
+        return type;
+    }
+
     public void update(float delta){
         // TODO Auto-generated method stub
     }
 
     public void draw(SpriteBatch batch){
 
-        if(touched){
-            batch.setColor(Color.WHITE);
+        if(touched || between){
+            batch.setColor(Color.PURPLE);
         }
         else {
             batch.setColor(type.getColor());
         }
-        batch.draw(texture, row * grid.cellWidth + grid.normalPadding, coll * grid.cellHeight + grid.normalPadding, grid.cellWidth, grid.cellHeight);
+        batch.draw(texture, gridPosition.x * grid.cellWidth + grid.normalPadding, gridPosition.y * grid.cellHeight + grid.normalPadding, grid.cellWidth, grid.cellHeight);
     }
 
     public void dispose() {

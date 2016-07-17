@@ -1,17 +1,17 @@
 package com.name.game.structure.graph;
 
+import com.badlogic.gdx.math.Vector2;
+
 import java.util.ArrayList;
 
 public class Vertex {
 	
-	private float x;
-	private float y;
-	
+
+	private Vector2 screenPosition;
 	private ArrayList<Edge> edges;
 	
-	public Vertex(float x, float y){
-		this.x = x;
-		this.y = y;
+	public Vertex(Vector2 screenPosition){
+		this.screenPosition = screenPosition;
 		edges = new ArrayList<Edge>();
 	}
 
@@ -38,13 +38,17 @@ public class Vertex {
 	public int getEdgesSize(){
 		return edges.size();
 	}
-	
+
+	public Vector2 getScreenPosition(){
+		return screenPosition;
+	}
+
 	public float getX(){
-		return x;
+		return screenPosition.x;
 	}
 	
 	public float getY(){
-		return y;
+		return screenPosition.y;
 	}
 	
 	public ArrayList<Edge> getEdges(){
@@ -53,7 +57,7 @@ public class Vertex {
 	
 	@Override
 	public String toString(){
-		return "Vertex: -> x: " + x + " y: " + y;
+		return "Vertex: -> x: " + screenPosition.x + " y: " + screenPosition.y;
 	}
 	
 	@Override
@@ -68,6 +72,6 @@ public class Vertex {
 		
 		Vertex o = (Vertex) other;
 		
-		return (x == o.getX() && y == o.getY());
+		return (screenPosition.x == o.getX() && screenPosition.y == o.getY());
 	}
 }

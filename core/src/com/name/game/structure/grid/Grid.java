@@ -60,7 +60,7 @@ public class Grid implements InputProcessor {
 
         for(int i = 0; i < rows; i++){
             for (int j = 0; j < cols; j++){
-                Cell cell = new Cell(this, j, i);
+                Cell cell = new Cell(this, new Vector2(j, i));
                 grid[i][j] = cell;
                 graph.addVertex(cell);
             }
@@ -99,7 +99,6 @@ public class Grid implements InputProcessor {
         }
 
         // draw graph
-
         render.setAutoShapeType(true);
         render.begin();
         render.setColor(Color.CYAN);
@@ -126,30 +125,64 @@ public class Grid implements InputProcessor {
         }
     }
 
-    private void manageTouchAction(Vector2 input){
+    private Vector2 getCellGridPos(Vector2 cellScreenPos){
+        int x = (int) ((cellScreenPos.x - normalPadding) / cellWidth);
+        int y = (int) ((cellScreenPos.y - normalPadding) / cellHeight);
 
-        if(input.x >= normalPadding  && input.x <= MyGame.WIDTH - normalPadding &&
-                input.y >= normalPadding && input.y <= MyGame.HEIGHT - topPadding){
+        return new Vector2(x, y);
+    }
 
-            int x = (int) ((input.x - normalPadding) / cellWidth);
-            int y = (int) ((input.y - normalPadding) / cellHeight);
 
-            Cell newCell = grid[y][x];
+    private boolean validConnection(Vector2 input){
+        // line ecuation a * x + b = y
+
+        Vector2 endPoint = toCell != null ? toCell.getGridPosition() : fromCell.getGridPosition();
+
+        float a = (endPoint.y - input.y) / (endPoint.x - input.x);
+
+        float b = endPoint.y - a * endPoint.x;
+
+        for(float x = endPoint.x; x < input.x; x++){
+            float y = a * x + b;
+
+            Vector2 cellGridPos = getCellGridPos(new Vector2(x, y));
+            Cell nextCell = grid[(int)cellGridPos.y][(int)cellGridPos.x];
+
+            if(nextCell.getCellType() != CellType.EMPTY && !nextCell.wasSeen()){
+                nextCell.setBetween();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void connectCells(Vector2 cellScreenPos){
+
+        if(cellScreenPos.x >= normalPadding  && cellScreenPos.x <= MyGame.WIDTH - normalPadding &&
+                cellScreenPos.y >= normalPadding && cellScreenPos.y <= MyGame.HEIGHT - topPadding){
+
+            Vector2 cellGridPos = getCellGridPos(cellScreenPos);
+
+            Cell newCell = grid[(int)cellGridPos.y][(int)cellGridPos.x];
 
             // click on new cell
-            if(!newCell.wasSeen()) {
+            if(newCell.wasSeen() == false) {
 
-                if (toCell == null) {
-                    toCell = newCell;
-                    toCell.touch();
-                    graph.addEdge(fromCell, toCell);
+                if (validConnection(newCell.getScreenPosition())) {
 
-                } else {
-                    fromCell.touch();
-                    fromCell = toCell;
-                    toCell = newCell;
-                    toCell.touch();
-                    graph.addEdge(fromCell, toCell);
+                    if (toCell == null) {
+                        toCell = newCell;
+                        toCell.touch();
+                        graph.addEdge(fromCell, toCell);
+
+                    } else {
+                        fromCell.touch();
+                        fromCell = toCell;
+                        toCell = newCell;
+                        toCell.touch();
+                        graph.addEdge(fromCell, toCell);
+                    }
                 }
             }
 
@@ -170,10 +203,10 @@ public class Grid implements InputProcessor {
                     toCell = null;
                 }
             }
-            Gdx.app.log(x + "->" + y, "Hey");
+            Gdx.app.log((int)cellGridPos.x + "->" + (int)cellGridPos.y, "Hey");
         }
 
-        Gdx.app.log(input.x + "->" + input.y, "Hey");
+        //Gdx.app.log(cellScreenPos.x + "->" + cellScreenPos.y, "Hey");
     }
 
     // Input Processor
@@ -199,7 +232,7 @@ public class Grid implements InputProcessor {
         Vector2 input = new Vector2(screenX, screenY);
         game.port.unproject(input);
 
-        manageTouchAction(input);
+        connectCells(input);
         return true;
     }
 

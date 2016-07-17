@@ -1,5 +1,7 @@
 package com.name.game.structure.graph;
 
+import com.badlogic.gdx.math.Vector2;
+
 import java.util.ArrayList;
 
 public class TestGraph {
@@ -10,18 +12,18 @@ public class TestGraph {
         ArrayList<Vertex> vertices = new ArrayList<Vertex>();
 
         for(int i = 0; i < 5; i++){
-            vertices.add(new Vertex(i * 30, i * 50));
+            vertices.add(new Vertex(new Vector2(i * 30, i * 50)));
         }
 
         Graph graph = new Graph(vertices);
 
-        graph.addVertex(new Vertex(30, 50));
+        graph.addVertex(new Vertex(new Vector2(30, 50)));
 
         graph.addEdge(vertices.get(1), vertices.get(2));
         graph.addEdge(vertices.get(2), vertices.get(3));
         graph.addEdge(vertices.get(4), vertices.get(3));
-        graph.addEdge(new Vertex(1 * 30, 1 * 50),
-                new Vertex(2 * 30, 2 * 50));
+        graph.addEdge(new Vertex (new Vector2(1 * 30, 1 * 50)),
+                new Vertex(new Vector2(2 * 30, 2 * 50)));
 
 
         System.out.println(graph);
