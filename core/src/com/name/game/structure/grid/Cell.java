@@ -47,9 +47,11 @@ public class Cell extends Vertex {
         touched = !touched;
     }
 
-    public void between(){
-        between = true;
+    public void setBetween(boolean b){
+        between = b;
     }
+
+    public boolean isBetween() { return between; }
 
     public void unSee(){
         seen = false;
@@ -69,8 +71,11 @@ public class Cell extends Vertex {
 
     public void draw(SpriteBatch batch){
 
-        if(touched || between){
+        if(touched){
             batch.setColor(Color.PURPLE);
+        }
+        else if (between){
+            batch.setColor(Color.GOLD);
         }
         else {
             batch.setColor(type.getColor());

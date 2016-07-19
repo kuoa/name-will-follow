@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.name.game.MyGame;
 import com.name.game.structure.graph.Edge;
 import com.name.game.structure.graph.Graph;
@@ -27,6 +28,11 @@ public class Grid implements InputProcessor {
 
     private Cell startCell;
     private Cell endCell;
+
+    private Cell betweenCell;
+    private double betweenTime = 600.;
+    private double startTime = 0.;
+
 
     public final int[][] types;
     public final float normalPadding;
@@ -68,10 +74,10 @@ public class Grid implements InputProcessor {
 
         startCell = grid[0][0];
         startCell.touch();
-        endCell = grid[rows - 1][cols - 1];
-        endCell.touch();
         fromCell = startCell;
 
+        endCell = grid[rows - 1][cols - 1];
+        endCell.setBetween(true);
 
         Gdx.input.setInputProcessor(this);
     }
@@ -115,6 +121,16 @@ public class Grid implements InputProcessor {
         }
 
         render.end();
+
+        if(betweenCell != null){
+            double deltaTime = TimeUtils.millis() - startTime;
+
+            if(deltaTime > betweenTime){
+                startTime = 0.;
+                betweenCell.setBetween(false);
+                betweenCell = null;
+            }
+        }
     }
 
     public void dispose() {
@@ -132,32 +148,89 @@ public class Grid implements InputProcessor {
         return new Vector2(x, y);
     }
 
+    private boolean checkSelectedPoint(Vector2 currentPoint, Vector2 endPoint){
+
+        Vector2 cellGridPos = getCellGridPos(currentPoint);
+        Cell nextCell = grid[(int)cellGridPos.y][(int)cellGridPos.x];
+
+        if(nextCell.getCellType() != CellType.EMPTY && nextCell.getScreenPosition() != endPoint && !nextCell.wasSeen()){
+            nextCell.setBetween(true);
+            betweenCell = nextCell;
+            startTime = TimeUtils.millis();
+            return false;
+        }
+
+        return true;
+    }
 
     private boolean validConnection(Vector2 input){
         // line ecuation a * x + b = y
 
-        Vector2 endPoint = toCell != null ? toCell.getGridPosition() : fromCell.getGridPosition();
+        Vector2 startPoint = toCell == null ? startCell.getScreenPosition(): toCell.getScreenPosition();
+        Vector2 endPoint = input;
 
-        float a = (endPoint.y - input.y) / (endPoint.x - input.x);
 
-        float b = endPoint.y - a * endPoint.x;
 
-        for(float x = endPoint.x; x < input.x; x++){
-            float y = a * x + b;
+        System.out.println(input);
+        System.out.println(input.cpy());
 
-            Vector2 cellGridPos = getCellGridPos(new Vector2(x, y));
-            Cell nextCell = grid[(int)cellGridPos.y][(int)cellGridPos.x];
+        float deltaY = (startPoint.y - endPoint.y);
+        float deltaX = (startPoint.x - endPoint.x);
 
-            if(nextCell.getCellType() != CellType.EMPTY && !nextCell.wasSeen()){
-                nextCell.setBetween();
-                return false;
+        System.out.println(deltaY);
+        System.out.println(deltaX);
+
+        if(deltaX == 0){
+
+            if(startPoint.y < endPoint.y) {
+
+                for (float y = startPoint.y; y < endPoint.y; y++) {
+
+                    if (!checkSelectedPoint(new Vector2(startPoint.x, y), endPoint)) {
+                        return false;
+                    }
+                }
+            }else {
+                for (float y = startPoint.y; y > endPoint.y; y--) {
+
+                    if (!checkSelectedPoint(new Vector2(startPoint.x, y), endPoint)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        else{
+            float a = deltaY / deltaX;
+
+            System.out.println(a);
+
+            float b = endPoint.y - a * endPoint.x;
+
+            if (startPoint.x < endPoint.x) {
+
+                for (float x = startPoint.x; x < endPoint.x; x++) {
+                    float y = a * x + b;
+
+                    if (!checkSelectedPoint(new Vector2(x, y), endPoint)) {
+                        return false;
+                    }
+                }
+            }
+            else{
+                for (float x = startPoint.x; x > endPoint.x; x--) {
+                    float y = a * x + b;
+
+                    if (!checkSelectedPoint(new Vector2(x, y), endPoint)) {
+                        return false;
+                    }
+                }
             }
         }
 
         return true;
     }
 
-    private void connectCells(Vector2 cellScreenPos){
+    private void connectCells(Vector2 cellScreenPos) {
 
         if(cellScreenPos.x >= normalPadding  && cellScreenPos.x <= MyGame.WIDTH - normalPadding &&
                 cellScreenPos.y >= normalPadding && cellScreenPos.y <= MyGame.HEIGHT - topPadding){
@@ -167,9 +240,29 @@ public class Grid implements InputProcessor {
             Cell newCell = grid[(int)cellGridPos.y][(int)cellGridPos.x];
 
             // click on new cell
-            if(newCell.wasSeen() == false) {
+            if (newCell.wasSeen()) {
 
-                if (validConnection(newCell.getScreenPosition())) {
+                if(newCell == toCell) {
+                    toCell.touch();
+                    toCell.unSee();
+
+                    graph.removeEdge(toCell.getFirstEdge());
+                    toCell = fromCell;
+
+                    if(toCell.getFirstEdge() != null) {
+                        fromCell = (Cell) toCell.getFirstEdge().getFrom();
+                        fromCell.touch();
+                    }
+                    else{
+                        fromCell = startCell;
+                        toCell = null;
+                    }
+                }
+            }
+
+            // reclick on last cell
+            else {
+                if (validConnection(newCell.getScreenPosition())){
 
                     if (toCell == null) {
                         toCell = newCell;
@@ -186,27 +279,8 @@ public class Grid implements InputProcessor {
                 }
             }
 
-            // reclick on last cell
-            else if(newCell == toCell) {
-                toCell.touch();
-                toCell.unSee();
-
-                graph.removeEdge(toCell.getFirstEdge());
-                toCell = fromCell;
-
-                if(toCell.getFirstEdge() != null) {
-                    fromCell = (Cell) toCell.getFirstEdge().getFrom();
-                    fromCell.touch();
-                }
-                else{
-                    fromCell = startCell;
-                    toCell = null;
-                }
-            }
             Gdx.app.log((int)cellGridPos.x + "->" + (int)cellGridPos.y, "Hey");
         }
-
-        //Gdx.app.log(cellScreenPos.x + "->" + cellScreenPos.y, "Hey");
     }
 
     // Input Processor
