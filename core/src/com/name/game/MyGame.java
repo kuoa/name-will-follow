@@ -27,6 +27,7 @@ public class MyGame extends Game {
 
         port = new ExtendViewport(WIDTH, HEIGHT, camera);
         port.apply();
+
         camera.translate(WIDTH / 2, HEIGHT / 2);
 
 		setScreen(new PlayScreen(this));
@@ -34,7 +35,6 @@ public class MyGame extends Game {
 
 	@Override
 	public void render() {
-		
 		super.render();
 	}
 }
