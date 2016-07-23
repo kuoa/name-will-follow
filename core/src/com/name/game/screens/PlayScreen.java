@@ -5,42 +5,22 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.name.game.MyGame;
 import com.name.game.structure.grid.Grid;
-
+import com.name.game.structure.level.Level;
+import com.name.game.structure.level.LevelFactory;
 
 
 public class PlayScreen implements Screen {
 
 	private Grid grid;
     private MyGame game;
+	private Level level;
 	
 	public PlayScreen(MyGame game) {
 
         this.game = game;
-
-		int r = 20;
-		int c = 10;
-
-		int[][] types = new int[r][c];
-
-		for(int i = 0; i < r; i++){
-			for(int j = 0; j < c; j++){
-				if(Math.random() < 0.3) {
-                    types[i][j] = (int) (Math.random() * 3);
-                }
-                else{
-                    types[i][j] = 3;
-                }
-			}
-		}
-
-        for(int i = r - 1; i >= 0; i--){
-            for(int j = 0; j < c; j++){
-                System.out.print(types[i][j]);
-            }
-            System.out.println();
-        }
-
-		grid = new Grid(game, types);
+		grid = new Grid(game);
+		level = LevelFactory.loadLevel("01");
+		grid.load(level);
 
 	}
 

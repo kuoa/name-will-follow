@@ -32,10 +32,10 @@ public class Cell extends Vertex {
 
         this.grid = grid;
 
-        int typeIndex = grid.types[(int)gridPosition.y][(int)gridPosition.x];
+        int typeIndex = grid.level.types[(int)gridPosition.y][(int)gridPosition.x];
         this.type = CellType.values()[typeIndex];
 
-        texture = new Texture("pixel.jpg");
+        texture = new Texture("res/pixel.jpg");
     }
 
     public Vector2 getGridPosition(){

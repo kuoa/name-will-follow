@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.name.game.MyGame;
 import com.name.game.structure.graph.Edge;
 import com.name.game.structure.graph.Graph;
+import com.name.game.structure.level.Level;
 
 /**
  * Created by kuoa on 7/12/16.
@@ -15,58 +16,61 @@ import com.name.game.structure.graph.Graph;
 public class Grid {
 
     MyGame game;
-
-    private int rows;
-    private int cols;
-    private Color bgColor;
-
+    Level level;
     Cell[][] cells;
     Graph graph;
 
-    Cell fromCell;
-    Cell toCell;
+    private Color bgColor;
 
     Cell startCell;
     Cell endCell;
+
+    Cell fromCell;
+    Cell toCell;
 
     Cell betweenCell;
     private final double betweenTime;
     double startTime = 0.;
 
 
-    final int[][] types;
     final float normalPadding;
     final float topPadding;
-    final float cellWidth;
-    final float cellHeight;
+    float cellWidth;
+    float cellHeight;
 
     private ShapeRenderer render = new ShapeRenderer();
 
-    public Grid(MyGame game, int[][] types) {
+    public Grid(MyGame game) {
 
         render.setProjectionMatrix(game.batch.getProjectionMatrix());
 
         this.game = game;
-        this.types = types;
 
-        rows = types.length;
-        cols = types[0].length;
         bgColor = new Color(0.2f, 0.2f, 0.2f, 1);
-        graph = new Graph();
 
         normalPadding = 10;
         topPadding = 60;
         betweenTime = 600.;
-        
-        cellWidth = (MyGame.WIDTH - 2 * normalPadding) / cols;
-        cellHeight = (MyGame.HEIGHT - normalPadding - topPadding) / rows;
 
-        cells = new Cell[rows][cols];
+        Gdx.input.setInputProcessor(new GridInputProcessor(this));
+    }
 
-        System.out.println("Rows: " + rows + " Cols: " + cols);
+    // Rendering
 
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+    public void load(Level level){
+
+        this.level = level;
+        graph = new Graph();
+        cells = new Cell[level.rows][level.cols];
+
+        cellWidth = (MyGame.WIDTH - 2 * normalPadding) / level.cols;
+        cellHeight = (MyGame.HEIGHT - normalPadding - topPadding) / level.rows;
+
+
+        System.out.println("Rows: " + level.rows + " Cols: " + level.cols);
+
+        for (int i = 0; i < level.rows; i++) {
+            for (int j = 0; j < level.cols; j++) {
                 Cell cell = new Cell(this, new Vector2(j, i));
                 cells[i][j] = cell;
                 graph.addVertex(cell);
@@ -75,20 +79,18 @@ public class Grid {
 
         startCell = cells[0][0];
         startCell.touch();
+
         fromCell = startCell;
 
-        endCell = cells[rows - 1][cols - 1];
+        endCell = cells[level.rows - 1][level.cols - 1];
         endCell.setBetween(true);
 
-        Gdx.input.setInputProcessor(new GridInputProcessor(this));
     }
-
-    // Rendering
 
     public void update(float delta) {
 
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        for (int i = 0; i < level.rows; i++) {
+            for (int j = 0; j < level.cols; j++) {
                 cells[i][j].update(delta);
             }
         }
@@ -99,8 +101,8 @@ public class Grid {
         Gdx.gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
 
         // draw cells
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        for (int i = 0; i < level.rows; i++) {
+            for (int j = 0; j < level.cols; j++) {
                 cells[i][j].draw(game.batch);
             }
         }
@@ -135,8 +137,8 @@ public class Grid {
     }
 
     public void dispose() {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        for (int i = 0; i < level.rows; i++) {
+            for (int j = 0; j < level.cols; j++) {
                 cells[i][j].dispose();
             }
         }
