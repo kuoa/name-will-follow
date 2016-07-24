@@ -40,9 +40,8 @@ public class PlayScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.camera.update();
         game.batch.setProjectionMatrix(game.camera.combined);
-		game.batch.begin();
+
 		grid.draw();
-		game.batch.end();
 	}
 
 	@Override

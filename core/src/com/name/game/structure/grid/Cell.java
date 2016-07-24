@@ -2,6 +2,7 @@ package com.name.game.structure.grid;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.name.game.structure.graph.Vertex;
@@ -20,6 +21,7 @@ public class Cell extends Vertex {
 
     private CellType type;
     private Texture texture;
+    private Sprite sprite;
 
     public Cell(Grid grid, Vector2 gridPosition){
 
@@ -36,6 +38,7 @@ public class Cell extends Vertex {
         this.type = CellType.values()[typeIndex];
 
         texture = new Texture("res/pixel.jpg");
+        sprite = grid.atlas.createSprite("grey");
     }
 
     public Vector2 getGridPosition(){
@@ -71,16 +74,21 @@ public class Cell extends Vertex {
 
     public void draw(SpriteBatch batch){
 
-        if(touched){
-            batch.setColor(Color.PURPLE);
-        }
-        else if (between){
+
+       if (between){
             batch.setColor(Color.GOLD);
         }
         else {
             batch.setColor(type.getColor());
         }
-        batch.draw(texture, gridPosition.x * grid.cellWidth + grid.normalPadding, gridPosition.y * grid.cellHeight + grid.normalPadding, grid.cellWidth, grid.cellHeight);
+
+        batch.draw(grid.atlas.createSprite("grey"), gridPosition.x * grid.cellWidth + grid.normalPadding, gridPosition.y * grid.cellHeight + grid.normalPadding, grid.cellWidth, grid.cellHeight);
+
+        if(touched){
+            batch.setColor(Color.WHITE);
+            batch.draw(grid.atlas.createSprite("selectorA"), gridPosition.x * grid.cellWidth + grid.normalPadding, gridPosition.y * grid.cellHeight + grid.normalPadding, grid.cellWidth, grid.cellHeight);
+        }
+
     }
 
     public void dispose() {

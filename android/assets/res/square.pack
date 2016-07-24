@@ -1,0 +1,68 @@
+
+square.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+selectorA
+  rotate: false
+  xy: 1, 1
+  size: 38, 38
+  orig: 38, 38
+  offset: 0, 0
+  index: -1
+selectorB
+  rotate: false
+  xy: 41, 1
+  size: 38, 38
+  orig: 38, 38
+  offset: 0, 0
+  index: -1
+red
+  rotate: false
+  xy: 81, 7
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+green
+  rotate: false
+  xy: 115, 7
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+blue
+  rotate: false
+  xy: 149, 7
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+grey
+  rotate: false
+  xy: 183, 7
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+purple
+  rotate: false
+  xy: 217, 7
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+selectorC
+  rotate: false
+  xy: 251, 7
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+yellow
+  rotate: false
+  xy: 285, 7
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1

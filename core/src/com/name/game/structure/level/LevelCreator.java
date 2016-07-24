@@ -6,6 +6,6 @@ package com.name.game.structure.level;
 public class LevelCreator {
 
     public static void main (String [] args){
-        
+
     }
 }

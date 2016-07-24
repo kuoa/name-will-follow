@@ -149,7 +149,7 @@ public class GridInputProcessor implements InputProcessor {
                 }
             }
 
-            Gdx.app.log((int)cellGridPos.x + "->" + (int)cellGridPos.y, "Hey");
+            Gdx.app.log((int)cellGridPos.x + "->" + (int)cellGridPos.y, getClass().toString());
         }
     }
 

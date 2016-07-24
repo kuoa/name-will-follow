@@ -2,6 +2,7 @@ package com.name.game.structure.grid;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -19,6 +20,7 @@ public class Grid {
     Level level;
     Cell[][] cells;
     Graph graph;
+    TextureAtlas atlas;
 
     private Color bgColor;
 
@@ -45,6 +47,7 @@ public class Grid {
         render.setProjectionMatrix(game.batch.getProjectionMatrix());
 
         this.game = game;
+        atlas = game.resources.getTextureAtlas();
 
         bgColor = new Color(0.2f, 0.2f, 0.2f, 1);
 
@@ -100,12 +103,13 @@ public class Grid {
 
         Gdx.gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
 
-        // draw cells
+        game.batch.begin();
         for (int i = 0; i < level.rows; i++) {
             for (int j = 0; j < level.cols; j++) {
                 cells[i][j].draw(game.batch);
             }
         }
+        game.batch.end();
 
         // draw graph
         render.setAutoShapeType(true);
