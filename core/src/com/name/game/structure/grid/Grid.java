@@ -2,8 +2,11 @@ package com.name.game.structure.grid;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.name.game.MyGame;
@@ -41,6 +44,7 @@ public class Grid {
     float cellHeight;
 
     private ShapeRenderer render = new ShapeRenderer();
+    Texture line;
 
     public Grid(MyGame game) {
 
@@ -54,6 +58,9 @@ public class Grid {
         normalPadding = 10;
         topPadding = 60;
         betweenTime = 600.;
+
+        line = new Texture("res/line.png");
+        //line.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         Gdx.input.setInputProcessor(new GridInputProcessor(this));
     }
@@ -104,6 +111,7 @@ public class Grid {
         Gdx.gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
 
         game.batch.begin();
+
         for (int i = 0; i < level.rows; i++) {
             for (int j = 0; j < level.cols; j++) {
                 cells[i][j].draw(game.batch);
@@ -112,22 +120,41 @@ public class Grid {
         game.batch.end();
 
         // draw graph
-        render.setAutoShapeType(true);
-        render.begin();
-        render.setColor(Color.CYAN);
+        //render.setAutoShapeType(true);
+        //render.begin();
+        //render.setColor(Color.CYAN);
+
+        game.batch.begin();
 
         for (Edge e : graph.getEdges()) {
 
             Vector2 from = new Vector2(e.getFrom().getX(), e.getFrom().getY());
             Vector2 to = new Vector2(e.getTo().getX(), e.getTo().getY());
 
-            game.port.project(from);
-            game.port.project(to);
+            if (from.x > to.x){
+                Vector2 temp = from;
+                from = to;
+                to = temp;
+            }
 
-            render.rectLine(from, to, 2);
+            line.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            Sprite lineSprite = new Sprite(line);
+            lineSprite.setPosition(from.x, from.y);
+            lineSprite.setSize(from.dst(to), 8);
+
+            double dx = from.x - to.x;
+            double dy = from.y - to.y;
+
+            float rotation = dx != 0 ? (float) (Math.atan(dy / dx) * MathUtils.radiansToDegrees) : 90;
+
+            lineSprite.setRotation(rotation);
+            lineSprite.setOrigin(0, 4);
+            lineSprite.draw(game.batch);
         }
 
-        render.end();
+        game.batch.end();
+
+        //render.end();
 
         if (betweenCell != null) {
             double deltaTime = TimeUtils.millis() - startTime;

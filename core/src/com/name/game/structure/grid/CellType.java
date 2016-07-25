@@ -6,18 +6,21 @@ import com.badlogic.gdx.graphics.Color;
  * Created by kuoa on 7/12/16.
  */
 public enum CellType {
-    BLUE(Color.BLUE),
-    RED(Color.RED),
-    GREEN(Color.GREEN),
-    EMPTY(new Color(0.2f, 0.2f, 0.2f, 1));
+    BLUE("blue"),
+    GREEN("green"),
+    PURPLE("purple"),
+    EMPTY("empty"),
+    YELLOW("yellow"),
+    RED("red"),
+    GREY("grey");
 
-    private Color color;
+    private String name;
 
-    CellType(Color color){
-        this.color = color;
+    CellType(String name){
+        this.name = name;
     }
 
-    public Color getColor(){
-        return color;
+    public String getName(){
+        return name;
     }
 }

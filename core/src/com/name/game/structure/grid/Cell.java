@@ -20,8 +20,10 @@ public class Cell extends Vertex {
     private Grid grid;
 
     private CellType type;
-    private Texture texture;
-    private Sprite sprite;
+    private Sprite cellSprite;
+    private Sprite touchedSprite;
+    private Sprite betweenSprite;
+    private Sprite seenSprite;
 
     public Cell(Grid grid, Vector2 gridPosition){
 
@@ -37,8 +39,21 @@ public class Cell extends Vertex {
         int typeIndex = grid.level.types[(int)gridPosition.y][(int)gridPosition.x];
         this.type = CellType.values()[typeIndex];
 
-        texture = new Texture("res/pixel.jpg");
-        sprite = grid.atlas.createSprite("grey");
+        cellSprite = grid.atlas.createSprite(type.getName());
+        cellSprite.setPosition(gridPosition.x * grid.cellWidth + grid.normalPadding, gridPosition.y * grid.cellHeight + grid.normalPadding);
+        cellSprite.setSize(grid.cellWidth, grid.cellHeight);
+
+        touchedSprite = grid.atlas.createSprite("selectorA");
+        touchedSprite.setPosition(cellSprite.getX(), cellSprite.getY());
+        touchedSprite.setSize(cellSprite.getWidth(), cellSprite.getHeight());
+
+        betweenSprite = grid.atlas.createSprite("red");
+        betweenSprite.setPosition(cellSprite.getX(), cellSprite.getY());
+        betweenSprite.setSize(cellSprite.getWidth(), cellSprite.getHeight());
+
+        seenSprite = grid.atlas.createSprite("selectorB");
+        seenSprite.setPosition(cellSprite.getX(), cellSprite.getY());
+        seenSprite.setSize(cellSprite.getWidth(), cellSprite.getHeight());
     }
 
     public Vector2 getGridPosition(){
@@ -76,22 +91,21 @@ public class Cell extends Vertex {
 
 
        if (between){
-            batch.setColor(Color.GOLD);
+           betweenSprite.draw(batch);
         }
         else {
-            batch.setColor(type.getColor());
-        }
-
-        batch.draw(grid.atlas.createSprite("grey"), gridPosition.x * grid.cellWidth + grid.normalPadding, gridPosition.y * grid.cellHeight + grid.normalPadding, grid.cellWidth, grid.cellHeight);
+           cellSprite.draw(batch);
+       }
 
         if(touched){
-            batch.setColor(Color.WHITE);
-            batch.draw(grid.atlas.createSprite("selectorA"), gridPosition.x * grid.cellWidth + grid.normalPadding, gridPosition.y * grid.cellHeight + grid.normalPadding, grid.cellWidth, grid.cellHeight);
+            touchedSprite.draw(batch);
         }
-
+        else if(seen){
+            seenSprite.draw(batch);
+        }
     }
 
     public void dispose() {
-        texture.dispose();
+
     }
 }

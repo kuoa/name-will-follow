@@ -1,7 +1,7 @@
 
 square.png
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 selectorA
   rotate: false
@@ -45,23 +45,30 @@ grey
   orig: 32, 32
   offset: 0, 0
   index: -1
-purple
+empty
   rotate: false
   xy: 217, 7
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-selectorC
+purple
   rotate: false
   xy: 251, 7
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-yellow
+selectorC
   rotate: false
   xy: 285, 7
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+yellow
+  rotate: false
+  xy: 319, 7
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
